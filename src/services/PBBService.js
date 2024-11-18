@@ -53,22 +53,6 @@ class PBBService {
   }
 
 
-  // Método para obtener eventos específicos de PBB
-  async getMyBoards(pbbId) {
-    try {
-      const filter = this.contract.filters.PBBCreated();
-      const events = await this.contract.queryFilter(filter, 0, "latest");
-      return events.map(event => ({
-        pbbId: event.args.id.toString(),
-        content: event.args.creator,
-        sender: event.args.pbbAddress,
-      }));
-    } catch (error) {
-      console.error("Error al obtener eventos de boards:", error);
-      throw error;
-    }
-  }
-
   // Método para crear una nueva PBB
   async createPBB(name, authUsers) {
     try {
@@ -89,30 +73,6 @@ class PBBService {
       console.log("Mensaje agregado a la PBB:", content);
     } catch (error) {
       console.error("Error al agregar mensaje:", error);
-      throw error;
-    }
-  }
-
-  // Método para obtener un mensaje específico de un PBB
-  async getMessageFromPBB(pbbId, messageId) {
-    try {
-      const message = await this.contract.getMessageFromPBB(pbbId, messageId);
-      console.log("Mensaje recuperado:", message);
-      return message;
-    } catch (error) {
-      console.error("Error al obtener mensaje:", error);
-      throw error;
-    }
-  }
-
-  // Método para obtener mensajes paginados de un PBB
-  async getMessagesInRangeFromPBB(pbbId, startIndex, endIndex) {
-    try {
-      const messages = await this.contract.getMessagesInRangeFromPBB(pbbId, startIndex, endIndex);
-      console.log("Mensajes recuperados en rango:", messages);
-      return messages;
-    } catch (error) {
-      console.error("Error al obtener mensajes en rango:", error);
       throw error;
     }
   }

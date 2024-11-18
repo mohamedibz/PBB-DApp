@@ -1,5 +1,5 @@
 // Dirección del contrato PBBData
-export const PBBAddress = "0xfcAa386192dC548e8397220A2bdd24B7BB5d1e1E";
+export const PBBAddress = "0xA9e2385856F061A47C862355eE7ceFe95a46f939";
 
 // ABI del contrato PBBData
 export const PBBAbi = [

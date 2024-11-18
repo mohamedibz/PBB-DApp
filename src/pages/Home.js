@@ -52,7 +52,7 @@ function Home() {
 
     {/* Footer */}
     <footer className="p-4 bg-gray-900 text-center">
-      <p className="text-gray-400">© 2023 PBB - Todos los derechos reservados</p>
+      <p className="text-gray-400">© 2024 PBB - Todos los derechos reservados</p>
       <div className="flex justify-center space-x-4">
         <a href="#privacy" className="text-gray-400 hover:underline">Política de Privacidad</a>
         <a href="#terms" className="text-gray-400 hover:underline">Términos de Servicio</a>
