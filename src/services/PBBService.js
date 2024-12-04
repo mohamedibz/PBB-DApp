@@ -42,6 +42,7 @@ class PBBService {
 
       return events.map(event => ({
         sender: event.args.sender,
+        topic: event.args.topic,
         content: event.args.content,
         date: event.args.timestamp,
         txHash: event.transactionHash,
@@ -52,6 +53,23 @@ class PBBService {
     }
   }
 
+  // Método para obtener eventos pasados de MessageAdded y devolver tópicos únicos
+  async getTopics(pbbId) {
+    try {
+      const filter = this.contract.filters.MessageAdded(getBigInt(pbbId));
+      const events = await this.contract.queryFilter(filter, 0, "latest");
+
+      // Extraer los tópicos de los eventos y eliminar duplicados usando Set
+      const uniqueTopics = Array.from(
+        new Set(events.map(event => event.args.topic))
+      );
+
+      return uniqueTopics;
+    } catch (error) {
+      console.error("Error al obtener los tópicos:", error);
+      throw error;
+    }
+  }
 
   // Método para crear una nueva PBB
   async createPBB(name, authUsers) {
@@ -66,9 +84,9 @@ class PBBService {
   }
 
   // Método para agregar un mensaje a una PBB específica
-  async addMessageToPBB(pbbId, content) {
+  async addMessageToPBB(pbbId, content, topic) {
     try {
-      const tx = await this.contract.addMessageToPBB(pbbId, content);
+      const tx = await this.contract.addMessageToPBB(pbbId, content, topic);
       await tx.wait();
       console.log("Mensaje agregado a la PBB:", content);
     } catch (error) {
@@ -76,7 +94,6 @@ class PBBService {
       throw error;
     }
   }
-
 
 //--------------------------------------------------------------------------
 
@@ -104,7 +121,8 @@ class PBBService {
       const events = await this.contract.queryFilter(filter, 0, "latest");
 
       // Extraemos todos los pbbIds de los eventos autorizados
-      const authorizedPbbIds = events.map(event => event.args.pbbId);
+      let authorizedPbbIds = events.map(event => event.args.pbbId);
+      authorizedPbbIds = [...new Set(authorizedPbbIds)]
 
       // Ahora cargamos todos los boards creados que coinciden con esos pbbIds
       const boards = [];
@@ -138,21 +156,41 @@ class PBBService {
         const authEvents = await this.contract.queryFilter(authFilter, 0, "latest");
         const revokeEvents = await this.contract.queryFilter(revokeFilter, 0, "latest");
 
+
+        // Combina todos los eventos en un solo arreglo
+        const eventos = [...authEvents, ...revokeEvents];
+
+        // Ordena los eventos cronológicamente por el timestamp
+        eventos.sort((a, b) => {
+            return Number(a.args.timestamp) - Number(b.args.timestamp);
+        });
+
+        /*
+        console.log("Eventos ordenados por timestamp:");
+        console.log('====================================================')
+        eventos.forEach((event, index) => {
+            console.log(`Evento ${index + 1}:`);
+            console.log("  Tipo:", event.fragment.name);
+            console.log("  User:", event.args.newUser || event.args.user);
+            console.log("  Tiempo:", event.args.timestamp);
+        });
+        console.log('====================================================')
+        */
+
         // Usa un Set para manejar usuarios autorizados de forma única
         const authorizedUsersSet = new Set();
 
-        // Procesa los eventos de autorización
-        authEvents.forEach(event => {
-            authorizedUsersSet.add(event.args.newUser);
-        });
+        // Procesa los eventos en orden cronológico
+        eventos.forEach(event => {
+          if (event.fragment.name === "UserAuthorized") {
+              authorizedUsersSet.add(event.args.newUser);
+          } else if (event.fragment.name === "UserRevoked") {
+              authorizedUsersSet.delete(event.args.user);
+          }
+      });
 
-        // Procesa los eventos de revocación
-        revokeEvents.forEach(event => {
-            authorizedUsersSet.delete(event.args.user);
-        });
-
-        // Convierte el Set a array para la lista final de usuarios autorizados
-        return Array.from(authorizedUsersSet);
+      // Convierte el Set a array para la lista final de usuarios autorizados
+      return Array.from(authorizedUsersSet);
     } catch (error) {
         console.error("Error al obtener usuarios autorizados actuales:", error);
         throw error;
@@ -184,12 +222,6 @@ class PBBService {
       throw error;
     }
   }
-
-
-
-
-
-
 
 }
 

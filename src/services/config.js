@@ -1,5 +1,5 @@
 // Dirección del contrato PBBData
-export const PBBAddress = "0xA9e2385856F061A47C862355eE7ceFe95a46f939";
+export const PBBAddress = "0x19d1c33AEbdBCe70117F229991ec4C905De6E6F7";
 
 // ABI del contrato PBBData
 export const PBBAbi = [
@@ -45,6 +45,12 @@ export const PBBAbi = [
         "indexed": false,
         "internalType": "string",
         "name": "content",
+        "type": "string"
+      },
+      {
+        "indexed": false,
+        "internalType": "string",
+        "name": "topic",
         "type": "string"
       },
       {
@@ -167,6 +173,11 @@ export const PBBAbi = [
         "internalType": "string",
         "name": "content",
         "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "topic",
+        "type": "string"
       }
     ],
     "name": "addMessageToPBB",
@@ -256,6 +267,11 @@ export const PBBAbi = [
             "type": "string"
           },
           {
+            "internalType": "string",
+            "name": "topic",
+            "type": "string"
+          },
+          {
             "internalType": "uint256",
             "name": "timestamp",
             "type": "uint256"
@@ -304,6 +320,11 @@ export const PBBAbi = [
           {
             "internalType": "string",
             "name": "content",
+            "type": "string"
+          },
+          {
+            "internalType": "string",
+            "name": "topic",
             "type": "string"
           },
           {

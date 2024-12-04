@@ -135,9 +135,9 @@ function Create() {
     }
   };
 
-  const handleSendMessage = async (message) => {
+  const handleSendMessage = async (message, topic) => {
     try {
-      await pbbService.addMessageToPBB(selectedBoard, message);
+      await pbbService.addMessageToPBB(selectedBoard, message, topic);
       setShowMessageForm(false); // Cierra el formulario de mensajes
       const updatedMessages = await pbbService.getMessagesEvents(selectedBoard); // Recargar mensajes
       setMessages(updatedMessages);
@@ -163,10 +163,18 @@ function Create() {
       await pbbService.revokeUser(selectedBoard, userAddress);
       toast.success(`Usuario ${userAddress} revocado`);
     } catch (error) {
-      console.error("Error al revocar usuario:", error);
-      toast.error("Error al revocar usuario");
+      console.error("No tiene permiso para revocar usuario", error);
+      toast.error("No tiene permiso para revocar usuario");
     }
   };
+
+  const fetchTopics = async () => {
+    try {
+      return await pbbService.getTopics(selectedBoard);
+    } catch (error) {
+      console.error("Error al cargar los topicos", error);
+    }
+  }
 
   return (
     <div>
@@ -194,6 +202,8 @@ function Create() {
             handleShowMessageForm={setShowMessageForm} 
             boardName={boardName} 
             handleShowManageForm={setShowManageForm} 
+            fetchTopics={fetchTopics}
+            selectedBoard={selectedBoard}
           />
         </div>
         
@@ -204,7 +214,9 @@ function Create() {
           <div className="fixed inset-0 bg-transparent-700 bg-opacity-75 backdrop-blur-sm z-40 transition-opacity duration-5000 ease-in-out"></div>
           <div className="fixed inset-0 z-50 flex items-center justify-center">
             <div className="bg-yellow-800 p-1 rounded-lg shadow-lg w-[500px]">
-              <BoardForm handleCancel={() => setShowForm(false)} handleCreate={handleCreateBoard} />
+              <BoardForm 
+              handleCancel={() => setShowForm(false)} 
+              handleCreate={handleCreateBoard} />
             </div>
           </div>
         </div>
@@ -215,7 +227,10 @@ function Create() {
           <div className="fixed inset-0 bg-transparent-700 bg-opacity-75 backdrop-blur-sm z-40 transition-opacity duration-5000 ease-in-out"></div>
           <div className="fixed inset-0 z-50 flex items-center justify-center">
             <div className="bg-yellow-800 p-1 rounded-lg shadow-lg w-[500px]">
-              <MessageForm handleCancel={() => setShowMessageForm(false)} handleSend={handleSendMessage} />
+              <MessageForm 
+              handleCancel={() => setShowMessageForm(false)} 
+              handleSend={handleSendMessage} 
+              fetchTopics={fetchTopics} />
             </div>
           </div>
         </div>
