@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useEthereum } from "../context/EthereumContext";
 
-function AuthorizationForm({ selectedBoard, handleCancel, authorizeUser, revokeUser }) {
+function AuthorizationForm({ selectedBoard, handleCancel, authorizeUser, revokeUser, authorizeNewAdmin }) {
   const { pbbService } = useEthereum();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [newUserAddress, setNewUserAddress] = useState('');
+  const [newAdminAddress, setNewAdminAddress] = useState('');
   const [authorizedUsers, setAuthorizedUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState(authorizedUsers);
 
@@ -27,6 +28,7 @@ function AuthorizationForm({ selectedBoard, handleCancel, authorizeUser, revokeU
 
   return (
     <div className="bg-primary flex min-h-full flex-1 flex-col justify-center px-6 py-12 lg:px-8 rounded-lg">
+
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">
           Manage User Authorization
@@ -34,6 +36,7 @@ function AuthorizationForm({ selectedBoard, handleCancel, authorizeUser, revokeU
       </div>
 
       <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm space-y-6">
+
         {/* Formulario para agregar una nueva dirección */}
         <div>
           <label htmlFor="new-user" className="block text-sm font-medium leading-6 text-white">
@@ -60,6 +63,35 @@ function AuthorizationForm({ selectedBoard, handleCancel, authorizeUser, revokeU
             </button>
           </div>
         </div>
+
+
+        {/* Formulario para agregar una nueva dirección */}
+        <div>
+          <label htmlFor="new-user" className="block text-sm font-medium leading-6 text-white">
+            Transfer Admin Role
+          </label>
+          <div className="mt-2 flex">
+            <input
+              id="new-user"
+              name="newUser"
+              type="text"
+              placeholder="0x..."
+              value={newAdminAddress}
+              onChange={(e) => setNewAdminAddress(e.target.value)}
+              className="pl-2 block w-full rounded-l-md border-0 py-1.5 text-white shadow-sm ring-0 bg-gray-700 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+            />
+            <button
+              onClick={() => {
+                authorizeNewAdmin(newAdminAddress);
+                setNewAdminAddress('');
+              }}
+              className="bg-green-900 hover:bg-green-800 px-4 rounded-r-md text-white"
+            >
+              Transfer
+            </button>
+          </div>
+        </div>
+
 
         {/* Búsqueda entre usuarios autorizados */}
         <div className='flex flex-col items-center'>

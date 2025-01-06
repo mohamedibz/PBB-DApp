@@ -168,6 +168,16 @@ function Create() {
     }
   };
 
+  const handleTransferAdmin = async (userAddress) => {
+    try {
+      await pbbService.transferAdmin(selectedBoard, userAddress);
+      toast.success(`Usuario ${userAddress} autorizado`);
+    } catch (error) {
+      console.error("Error al autorizar usuario:", error);
+      toast.error("Error al autorizar usuario");
+    }
+  };
+
   const fetchTopics = async () => {
     try {
       return await pbbService.getTopics(selectedBoard);
@@ -246,6 +256,7 @@ function Create() {
                 authorizeUser={handleAuthorizeUser}
                 revokeUser={handleRevokeUser}
                 selectedBoard={selectedBoard}
+                authorizeNewAdmin={handleTransferAdmin}
               />
             </div>
           </div>

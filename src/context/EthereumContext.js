@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from "react";
-import { BrowserProvider } from "ethers";
+import { BrowserProvider, JsonRpcProvider } from "ethers";
 import PBBService from "../services/PBBService";
 
 const EthereumContext = createContext();
@@ -22,6 +22,7 @@ export function EthereumProvider({ children }) {
 
     const [selectedAccount] = await window.ethereum.request({ method: "eth_requestAccounts" });
     const provider = new BrowserProvider(window.ethereum);
+    //const provider = new JsonRpcProvider("http://127.0.0.1:8545");
     setProvider(provider);
     const signer = await provider.getSigner();
     setSigner(signer);

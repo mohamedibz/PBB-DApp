@@ -1,8 +1,40 @@
 // Dirección del contrato PBBData
-export const PBBAddress = "0x19d1c33AEbdBCe70117F229991ec4C905De6E6F7";
+export const PBBAddress = "0x53ceD0CE6F386DD6c00d82C6ea5cd1aD1C947544";
 
 // ABI del contrato PBBData
 export const PBBAbi = [
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "target",
+        "type": "address"
+      }
+    ],
+    "name": "AddressEmptyCode",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "implementation",
+        "type": "address"
+      }
+    ],
+    "name": "ERC1967InvalidImplementation",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "ERC1967NonPayable",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "FailedInnerCall",
+    "type": "error"
+  },
   {
     "inputs": [],
     "name": "InvalidInitialization",
@@ -12,6 +44,53 @@ export const PBBAbi = [
     "inputs": [],
     "name": "NotInitializing",
     "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "UUPSUnauthorizedCallContext",
+    "type": "error"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "bytes32",
+        "name": "slot",
+        "type": "bytes32"
+      }
+    ],
+    "name": "UUPSUnsupportedProxiableUUID",
+    "type": "error"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
+        "internalType": "uint256",
+        "name": "pbbId",
+        "type": "uint256"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "oldAdmin",
+        "type": "address"
+      },
+      {
+        "indexed": true,
+        "internalType": "address",
+        "name": "newAdmin",
+        "type": "address"
+      },
+      {
+        "indexed": false,
+        "internalType": "uint256",
+        "name": "timestamp",
+        "type": "uint256"
+      }
+    ],
+    "name": "AdminTransferred",
+    "type": "event"
   },
   {
     "anonymous": false,
@@ -105,6 +184,19 @@ export const PBBAbi = [
     "inputs": [
       {
         "indexed": true,
+        "internalType": "address",
+        "name": "implementation",
+        "type": "address"
+      }
+    ],
+    "name": "Upgraded",
+    "type": "event"
+  },
+  {
+    "anonymous": false,
+    "inputs": [
+      {
+        "indexed": true,
         "internalType": "uint256",
         "name": "pbbId",
         "type": "uint256"
@@ -163,6 +255,19 @@ export const PBBAbi = [
     "type": "event"
   },
   {
+    "inputs": [],
+    "name": "UPGRADE_INTERFACE_VERSION",
+    "outputs": [
+      {
+        "internalType": "string",
+        "name": "",
+        "type": "string"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -205,6 +310,11 @@ export const PBBAbi = [
   },
   {
     "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "version",
+        "type": "uint256"
+      },
       {
         "internalType": "string",
         "name": "name",
@@ -262,14 +372,14 @@ export const PBBAbi = [
             "type": "address"
           },
           {
-            "internalType": "string",
+            "internalType": "bytes32",
             "name": "content",
-            "type": "string"
+            "type": "bytes32"
           },
           {
-            "internalType": "string",
+            "internalType": "bytes32",
             "name": "topic",
-            "type": "string"
+            "type": "bytes32"
           },
           {
             "internalType": "uint256",
@@ -318,14 +428,14 @@ export const PBBAbi = [
             "type": "address"
           },
           {
-            "internalType": "string",
+            "internalType": "bytes32",
             "name": "content",
-            "type": "string"
+            "type": "bytes32"
           },
           {
-            "internalType": "string",
+            "internalType": "bytes32",
             "name": "topic",
-            "type": "string"
+            "type": "bytes32"
           },
           {
             "internalType": "uint256",
@@ -374,6 +484,32 @@ export const PBBAbi = [
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "pbbCounter",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "proxiableUUID",
+    "outputs": [
+      {
+        "internalType": "bytes32",
+        "name": "",
+        "type": "bytes32"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "uint256",
@@ -389,6 +525,42 @@ export const PBBAbi = [
     "name": "revokeUser",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "uint256",
+        "name": "pbbId",
+        "type": "uint256"
+      },
+      {
+        "internalType": "address",
+        "name": "newAdmin",
+        "type": "address"
+      }
+    ],
+    "name": "transferAdminOfPBB",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [
+      {
+        "internalType": "address",
+        "name": "newImplementation",
+        "type": "address"
+      },
+      {
+        "internalType": "bytes",
+        "name": "data",
+        "type": "bytes"
+      }
+    ],
+    "name": "upgradeToAndCall",
+    "outputs": [],
+    "stateMutability": "payable",
     "type": "function"
   }
 ];

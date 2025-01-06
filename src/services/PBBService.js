@@ -74,7 +74,7 @@ class PBBService {
   // Método para crear una nueva PBB
   async createPBB(name, authUsers) {
     try {
-      const tx = await this.contract.createPBB(name, authUsers);
+      const tx = await this.contract.createPBB(1, name, authUsers);
       await tx.wait();
       console.log("PBB creada exitosamente:", name);
     } catch (error) {
@@ -219,6 +219,19 @@ class PBBService {
       return tx.hash;  // Devuelve el hash de la transacción
     } catch (error) {
       console.error("Error al revocar usuario:", error);
+      throw error;
+    }
+  }
+
+  // Método para transferir el rol de administrador de un PBB
+  async transferAdmin(pbbId, newAdmin) {
+    try {
+      const tx = await this.contract.transferAdminOfPBB(pbbId, newAdmin);
+      await tx.wait(); // Espera la confirmación de la transacción
+      console.log(`Administrador transferido a: ${newAdmin} para el PBB con ID ${pbbId}`);
+      return tx.hash; // Devuelve el hash de la transacción
+    } catch (error) {
+      console.error("Error al transferir administrador:", error);
       throw error;
     }
   }
