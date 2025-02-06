@@ -1,0 +1,42 @@
+[33mcommit 58f29f19e6cdf954b6741a663bb7c487f5ebe1df[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m, [m[1;31morigin2/main[m[33m)[m
+Author: moha11 <mohamed.tanger2001@gmail.com>
+Date:   Mon Jan 6 21:54:10 2025 +0100
+
+    Se añadió en el frontend la funcionalidad para transferir permisos de administrador a otra dirección.
+
+[33mcommit 881336bc0eafb135438a0be62f3cb924aad41959[m
+Author: moha11 <mohamed.tanger2001@gmail.com>
+Date:   Wed Dec 4 13:24:46 2024 +0100
+
+    Añadido el atributo y filtrado Topic en los mensajes. Los mensajes de los usuarios revocados son de color rojo
+
+[33mcommit ae8945c8cf4a12791ada828fa0c7daabff239c90[m
+Merge: baa31d3 06d794b
+Author: moha11 <mohamed.tanger2001@gmail.com>
+Date:   Mon Nov 18 17:48:26 2024 +0100
+
+    Resolved merge
+
+[33mcommit baa31d397ad530e7933296fbb5d486aad7ba5d73[m
+Author: moha11 <mohamed.tanger2001@gmail.com>
+Date:   Mon Nov 18 17:39:24 2024 +0100
+
+    Eliminados algunos componentes redundantes
+
+[33mcommit 06d794b5a184a25dbf3a84f1effe525e5374804e[m
+Author: mohamedibz <64142985+mohamedibz@users.noreply.github.com>
+Date:   Mon Nov 18 17:38:19 2024 +0100
+
+    Initial commit
+
+[33mcommit 651c95bcd5df3d406a329e0a22971c800324dbe9[m
+Author: moha11 <mohamed.tanger2001@gmail.com>
+Date:   Mon Oct 28 13:37:54 2024 +0100
+
+    Implementado el frontend de la PBB, faltan mejoras
+
+[33mcommit 8442229f6512de30ad426fb5f61a5c841b3092c8[m
+Author: moha11 <mohamed.tanger2001@gmail.com>
+Date:   Thu Oct 17 15:20:05 2024 +0200
+
+    Initialize project using Create React App
