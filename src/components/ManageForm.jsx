@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useEthereum } from "../context/EthereumContext";
 
 function AuthorizationForm({ selectedBoard, handleCancel, authorizeUser, revokeUser, authorizeNewAdmin }) {
-  const { pbbService } = useEthereum();
+  const { pbbService, pbbService2 } = useEthereum();
 
   const [searchTerm, setSearchTerm] = useState('');
   const [newUserAddress, setNewUserAddress] = useState('');
@@ -12,7 +12,7 @@ function AuthorizationForm({ selectedBoard, handleCancel, authorizeUser, revokeU
 
   useEffect(() => {
     const fetchUsers = async () => {
-        setAuthorizedUsers(await pbbService.getCurrentAuthorizedUsers(selectedBoard));
+        setAuthorizedUsers(await pbbService2.getAuthorizedUsersByPBB(selectedBoard));
     };
     fetchUsers();
   }, []);

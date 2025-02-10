@@ -8,8 +8,9 @@ import { useNavigate } from 'react-router-dom';
 import MessageForm from '../components/MessageForm';
 import ManageForm from '../components/ManageForm';
 
+
 function Create() {
-  const { account, pbbService, connectWallet } = useEthereum();
+  const { account, pbbService, pbbService2, factoryService, connectWallet } = useEthereum();
   const [allBoards, setAllBoards] = useState([]);
   const [filteredBoards, setFilteredBoards] = useState([]);
   const [boardsToShow, setBoardsToShow] = useState([]);
@@ -38,12 +39,10 @@ function Create() {
 
   useEffect(() => {
     const fetchMessages = async () => {
-      if (!pbbService || selectedBoard === -1) return;
+      if (!pbbService2 || selectedBoard === -1) return;
       try {
-        const events = await pbbService.getMessagesEvents(selectedBoard);
+        const events = await pbbService2.getMessagesByPBB(selectedBoard);
         setMessages(events);
-        console.log("Mensajes cargados");
-        console.log(await pbbService.getCurrentAuthorizedUsers(selectedBoard));
       } catch (error) {
         console.error("Error al cargar Mensajes:", error);
         toast.error("Error al cargar mensajes");
@@ -54,25 +53,27 @@ function Create() {
   }, [pbbService, selectedBoard]);
 
   const loadAllBoards = async () => {
-    if (!pbbService) return;
+    if (!pbbService2) return;
     try {
-      let allEvents = await pbbService.getCreatedBoards();
+      //let allEvents = await pbbService2.getAllPBBs();
+      //console.log('PBBs => ' + allEvents)
+      let pbbs = [];
 
       switch (filterType) {
         case 1:
-          allEvents = await pbbService.getBoardsByCreator(account);
+          pbbs = await pbbService2.getCreatedPBBsByUser(account);
           break;
         case 2:
-          allEvents = await pbbService.getAuthorizedBoards(account);
+          pbbs = await pbbService2.getAuthorizedPBBsByUser(account);
           break;
         case 3:
         default:
-          allEvents = await pbbService.getCreatedBoards();
+          pbbs = await pbbService2.getAllPBBs();
           break;
       }
 
-      setAllBoards(allEvents);
-      applyFilterAndPaginate(1, searchTerm, allEvents);
+      setAllBoards(pbbs);
+      applyFilterAndPaginate(1, searchTerm, pbbs);
       
     } catch (error) {
       console.error("Error al cargar boards:", error);
@@ -83,7 +84,7 @@ function Create() {
   const applyFilterAndPaginate = (page, term = searchTerm, boards = allBoards) => {
     const filtered = boards.filter(board => 
       board.name.toLowerCase().includes(term.toLowerCase()) || 
-      board.pbbId.toString().includes(term)
+      board.id.toString().includes(term)
     );
 
     setFilteredBoards(filtered);
@@ -124,9 +125,11 @@ function Create() {
     setCurrentPage(1);
   };
 
-  const handleCreateBoard = async (name, authorizedUsers) => {
+
+  // FORMA NUEVA
+  const handleCreateBoard2 = async (name, authorizedUsers) => {
     try {
-      await pbbService.createPBB(name, authorizedUsers);
+      await factoryService.createPBB(name, authorizedUsers);
       loadAllBoards(); // Recargar boards al crearse uno nuevo
       toast.success("Board creado con éxito");
     } catch (error) {
@@ -137,9 +140,9 @@ function Create() {
 
   const handleSendMessage = async (message, topic) => {
     try {
-      await pbbService.addMessageToPBB(selectedBoard, message, topic);
+      await pbbService2.addMessageToPBB(selectedBoard, 1, message, topic);
       setShowMessageForm(false); // Cierra el formulario de mensajes
-      const updatedMessages = await pbbService.getMessagesEvents(selectedBoard); // Recargar mensajes
+      const updatedMessages = await pbbService2.getMessagesByPBB(selectedBoard); // Recargar mensajes
       setMessages(updatedMessages);
       toast.success("Mensaje enviado con éxito");
     } catch (error) {
@@ -150,7 +153,7 @@ function Create() {
 
   const handleAuthorizeUser = async (userAddress) => {
     try {
-      await pbbService.authorizeUser(selectedBoard, userAddress);
+      await pbbService2.authorizeUserToPBB(selectedBoard, 1, userAddress);
       toast.success(`Usuario ${userAddress} autorizado`);
     } catch (error) {
       console.error("Error al autorizar usuario:", error);
@@ -160,7 +163,7 @@ function Create() {
 
   const handleRevokeUser = async (userAddress) => {
     try {
-      await pbbService.revokeUser(selectedBoard, userAddress);
+      await pbbService2.revokeUserToPBB(selectedBoard, 1, userAddress);
       toast.success(`Usuario ${userAddress} revocado`);
     } catch (error) {
       console.error("No tiene permiso para revocar usuario", error);
@@ -180,7 +183,8 @@ function Create() {
 
   const fetchTopics = async () => {
     try {
-      return await pbbService.getTopics(selectedBoard);
+      if(!pbbService2) return
+      return await pbbService2.getTopicsByPBB(selectedBoard);
     } catch (error) {
       console.error("Error al cargar los topicos", error);
     }
@@ -226,7 +230,7 @@ function Create() {
             <div className="bg-yellow-800 p-1 rounded-lg shadow-lg w-[500px]">
               <BoardForm 
               handleCancel={() => setShowForm(false)} 
-              handleCreate={handleCreateBoard} />
+              handleCreate={handleCreateBoard2} />
             </div>
           </div>
         </div>

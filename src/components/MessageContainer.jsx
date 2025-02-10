@@ -4,7 +4,7 @@ import writeIcon from '../assets/writeIcon.png';
 import { useEthereum } from "../context/EthereumContext";
 
 const MessageContainer = ({ messages, handleShowMessageForm, boardName, handleShowManageForm, fetchTopics, selectedBoard }) => {
-  const { pbbService } = useEthereum();
+  const { pbbService2 } = useEthereum();
 
   const [authorizedUsers, setAuthorizedUsers] = useState([]);
   const [isLoadingUsers, setIsLoadingUsers] = useState(true); // Estado de carga
@@ -17,7 +17,7 @@ const MessageContainer = ({ messages, handleShowMessageForm, boardName, handleSh
     const fetchUsers = async () => {
       if (selectedBoard !== -1) {
         try {
-          const users = await pbbService.getCurrentAuthorizedUsers(selectedBoard);
+          const users = await pbbService2.getAuthorizedUsersByPBB(selectedBoard);
           setAuthorizedUsers(users || []);
         } catch (error) {
           console.error("Error al obtener usuarios autorizados:", error);
@@ -28,7 +28,7 @@ const MessageContainer = ({ messages, handleShowMessageForm, boardName, handleSh
       }
     };
     fetchUsers();
-  }, [selectedBoard, pbbService]);
+  }, [selectedBoard, pbbService2]);
 
   useEffect(() => {
     const loadTopics = async () => {
@@ -60,7 +60,7 @@ const MessageContainer = ({ messages, handleShowMessageForm, boardName, handleSh
       return selectedTopic ? message.topic === selectedTopic : true;
     }
 
-    return message.sender.toLowerCase().includes(term);
+    return message.sender.id.toLowerCase().includes(term);
   });
 
   // Mostrar indicador de carga si los usuarios aún no están listos
@@ -137,17 +137,17 @@ const MessageContainer = ({ messages, handleShowMessageForm, boardName, handleSh
       <div className="mt-4 space-y-4 max-h-[calc(100vh-330px)] overflow-y-auto">
         {filteredMessages.length > 0 ? (
           filteredMessages.map((message, index) => {
-            const isAuthorized = authorizedUsers.includes(message.sender);
+            const isAuthorized = authorizedUsers.includes(message.sender.id);
             return (
               <div 
                 key={index} 
                 className={`p-4 border-y-2 ${!isAuthorized ? 'bg-red-950' : 'bg-primary'} border-gray-500`}
                 onClick={() => {}}
               >
-                <p className={`font-semibold mb-1 ${!isAuthorized ? 'text-white' : 'text-yellow-700'}`}>
-                  Author: <span className={`font-normal ${!isAuthorized ? 'text-gray-200' : 'text-gray-400'}`}>{message.sender}</span>
+                <p className={`font-semibold mb-1 ${isAuthorized ? 'text-white' : 'text-yellow-700'}`}>
+                  Author: <span className={`font-normal ${isAuthorized ? 'text-gray-200' : 'text-gray-400'}`}>{message.sender.id}</span>
                 </p>
-                <p className="text-yellow-700 font-semibold mb-1">Date: <span className="text-gray-400 font-normal">{formatDate(message.date)}</span></p>
+                <p className="text-yellow-700 font-semibold mb-1">Date: <span className="text-gray-400 font-normal">{formatDate(message.timestamp)}</span></p>
                 <p className="text-yellow-700 font-semibold mb-1">Topic: <span className="text-gray-400 font-normal">{message.topic}</span></p>
                 <p className="text-yellow-700 font-semibold">Content:</p>
                 <p className="text-gray-400 ml-4">{message.content}</p>

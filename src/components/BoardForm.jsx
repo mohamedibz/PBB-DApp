@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import Papa from 'papaparse';
 
 function BoardForm({ handleCancel, handleCreate }) {
+  
   const [name, setName] = useState('');
   const [authorizedUsers, setAuthorizedUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);

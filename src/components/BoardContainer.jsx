@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { createHash } from "crypto-browserify";
+
 
 const PBBContainer = ({ 
   pbbData, 
@@ -19,6 +21,14 @@ const PBBContainer = ({
   const [isLoading, setIsLoading] = useState(true);
   const [selectedBoardId, setSelectedBoardId] = useState(null); // Estado para el ID seleccionado
 
+
+  function generateShortSHA256(address) {
+    const hash = createHash('sha256');
+    hash.update(address.toLowerCase());
+    return hash.digest('hex').slice(0, 16);  // Devuelve los primeros 16 caracteres
+  }
+
+
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
@@ -37,8 +47,8 @@ const PBBContainer = ({
   };
 
   const handleBoardClick = (pbb) => {
-    setSelectedBoardId(pbb.pbbId); // Marcar como seleccionado
-    selectBoard(pbb.pbbId);
+    setSelectedBoardId(pbb.id); // Marcar como seleccionado
+    selectBoard(pbb.id);
     setBoardName(pbb.name);
   };
 
@@ -107,15 +117,15 @@ const PBBContainer = ({
               key={index} 
               onClick={() => handleBoardClick(pbb)}
               className={`p-3 border-y-2 border-gray-500 ${
-                selectedBoardId === pbb.pbbId
+                selectedBoardId === pbb.id
                   ? "bg-yellow-950" // Color de fondo cuando está seleccionado
                   : "bg-primary hover:bg-gray-700" // Color de fondo predeterminado
               }`}
             >
-              <p className="text-yellow-700 font-semibold mb-1">ID: <span className="text-gray-400 font-normal">{Number(pbb.pbbId)}</span></p>
+              <p className="text-yellow-700 font-semibold mb-1">ID: <span className="text-gray-400 font-normal">{generateShortSHA256(pbb.id)}</span></p>
               <p className="text-yellow-700 font-semibold mb-1">Name: <span className="text-gray-400 font-normal">{pbb.name}</span></p>
-              <p className="text-yellow-700 font-semibold mb-1">Created By: <span className="text-gray-400 font-normal">{pbb.creator}</span></p>
-              <p className="text-yellow-700 font-semibold">Date: <span className="text-gray-400 font-normal">{formatDate(pbb.date)}</span></p>
+              <p className="text-yellow-700 font-semibold mb-1">Created By: <span className="text-gray-400 font-normal">{pbb.creator.id}</span></p>
+              <p className="text-yellow-700 font-semibold">Date: <span className="text-gray-400 font-normal">{formatDate(pbb.timestamp)}</span></p>
             </div>
           ))
         ) : (
