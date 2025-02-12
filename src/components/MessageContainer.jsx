@@ -4,7 +4,7 @@ import writeIcon from '../assets/writeIcon.png';
 import { useEthereum } from "../context/EthereumContext";
 
 const MessageContainer = ({ messages, handleShowMessageForm, boardName, handleShowManageForm, fetchTopics, selectedBoard }) => {
-  const { pbbService2 } = useEthereum();
+  const { pbbService } = useEthereum();
 
   const [authorizedUsers, setAuthorizedUsers] = useState([]);
   const [isLoadingUsers, setIsLoadingUsers] = useState(true); // Estado de carga
@@ -17,7 +17,7 @@ const MessageContainer = ({ messages, handleShowMessageForm, boardName, handleSh
     const fetchUsers = async () => {
       if (selectedBoard !== -1) {
         try {
-          const users = await pbbService2.getAuthorizedUsersByPBB(selectedBoard);
+          const users = await pbbService.getAuthorizedUsersByPBB(selectedBoard);
           setAuthorizedUsers(users || []);
         } catch (error) {
           console.error("Error al obtener usuarios autorizados:", error);
@@ -28,7 +28,7 @@ const MessageContainer = ({ messages, handleShowMessageForm, boardName, handleSh
       }
     };
     fetchUsers();
-  }, [selectedBoard, pbbService2]);
+  }, [selectedBoard, pbbService]);
 
   useEffect(() => {
     const loadTopics = async () => {
@@ -52,7 +52,7 @@ const MessageContainer = ({ messages, handleShowMessageForm, boardName, handleSh
   const filteredMessages = messages.filter((message) => {
     const term = searchTerm.toLowerCase();
 
-    if (filterType === 'Content') {
+    if (filterType === 'content') {
       return message.content.toLowerCase().includes(term);
     }
 

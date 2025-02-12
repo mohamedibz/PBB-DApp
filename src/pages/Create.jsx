@@ -10,7 +10,7 @@ import ManageForm from '../components/ManageForm';
 
 
 function Create() {
-  const { account, pbbService, pbbService2, factoryService, connectWallet } = useEthereum();
+  const { account, pbbService, factoryService, connectWallet } = useEthereum();
   const [allBoards, setAllBoards] = useState([]);
   const [filteredBoards, setFilteredBoards] = useState([]);
   const [boardsToShow, setBoardsToShow] = useState([]);
@@ -39,9 +39,9 @@ function Create() {
 
   useEffect(() => {
     const fetchMessages = async () => {
-      if (!pbbService2 || selectedBoard === -1) return;
+      if (!pbbService || selectedBoard === -1) return;
       try {
-        const events = await pbbService2.getMessagesByPBB(selectedBoard);
+        const events = await pbbService.getMessagesByPBB(selectedBoard);
         setMessages(events);
       } catch (error) {
         console.error("Error al cargar Mensajes:", error);
@@ -53,22 +53,22 @@ function Create() {
   }, [pbbService, selectedBoard]);
 
   const loadAllBoards = async () => {
-    if (!pbbService2) return;
+    if (!pbbService) return;
     try {
-      //let allEvents = await pbbService2.getAllPBBs();
-      //console.log('PBBs => ' + allEvents)
+
       let pbbs = [];
 
       switch (filterType) {
         case 1:
-          pbbs = await pbbService2.getCreatedPBBsByUser(account);
+          pbbs = await pbbService.getCreatedPBBsByUser(account);
           break;
         case 2:
-          pbbs = await pbbService2.getAuthorizedPBBsByUser(account);
+          pbbs = await pbbService.getAuthorizedPBBsByUser(account);
+          console.log("PORQUEEE: " + pbbs)
           break;
         case 3:
         default:
-          pbbs = await pbbService2.getAllPBBs();
+          pbbs = await pbbService.getAllPBBs();
           break;
       }
 
@@ -129,7 +129,7 @@ function Create() {
   // FORMA NUEVA
   const handleCreateBoard2 = async (name, authorizedUsers) => {
     try {
-      await factoryService.createPBB(name, authorizedUsers);
+      await factoryService.createPBB(1, name, authorizedUsers);
       loadAllBoards(); // Recargar boards al crearse uno nuevo
       toast.success("Board creado con éxito");
     } catch (error) {
@@ -140,9 +140,9 @@ function Create() {
 
   const handleSendMessage = async (message, topic) => {
     try {
-      await pbbService2.addMessageToPBB(selectedBoard, 1, message, topic);
+      await pbbService.addMessageToPBB(selectedBoard, 1, message, topic);
       setShowMessageForm(false); // Cierra el formulario de mensajes
-      const updatedMessages = await pbbService2.getMessagesByPBB(selectedBoard); // Recargar mensajes
+      const updatedMessages = await pbbService.getMessagesByPBB(selectedBoard); // Recargar mensajes
       setMessages(updatedMessages);
       toast.success("Mensaje enviado con éxito");
     } catch (error) {
@@ -153,7 +153,7 @@ function Create() {
 
   const handleAuthorizeUser = async (userAddress) => {
     try {
-      await pbbService2.authorizeUserToPBB(selectedBoard, 1, userAddress);
+      await pbbService.authorizeUserToPBB(selectedBoard, 1, userAddress);
       toast.success(`Usuario ${userAddress} autorizado`);
     } catch (error) {
       console.error("Error al autorizar usuario:", error);
@@ -163,7 +163,7 @@ function Create() {
 
   const handleRevokeUser = async (userAddress) => {
     try {
-      await pbbService2.revokeUserToPBB(selectedBoard, 1, userAddress);
+      await pbbService.revokeUserToPBB(selectedBoard, 1, userAddress);
       toast.success(`Usuario ${userAddress} revocado`);
     } catch (error) {
       console.error("No tiene permiso para revocar usuario", error);
@@ -173,7 +173,7 @@ function Create() {
 
   const handleTransferAdmin = async (userAddress) => {
     try {
-      await pbbService.transferAdmin(selectedBoard, userAddress);
+      await pbbService.transferAdminToPBB(selectedBoard, 1, userAddress);
       toast.success(`Usuario ${userAddress} autorizado`);
     } catch (error) {
       console.error("Error al autorizar usuario:", error);
@@ -183,8 +183,8 @@ function Create() {
 
   const fetchTopics = async () => {
     try {
-      if(!pbbService2) return
-      return await pbbService2.getTopicsByPBB(selectedBoard);
+      if(!pbbService) return
+      return await pbbService.getTopicsByPBB(selectedBoard);
     } catch (error) {
       console.error("Error al cargar los topicos", error);
     }

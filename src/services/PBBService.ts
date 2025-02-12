@@ -9,7 +9,7 @@ interface PBB {
   creator: { id: string };
 }
 
-class PBBService2 {
+class PBBService {
 
   private provider: any;
   private signer: ethers.Signer;
@@ -31,6 +31,7 @@ class PBBService2 {
             topic
             content
             timestamp
+            txHash
           }
         }
       }
@@ -39,7 +40,33 @@ class PBBService2 {
     const data = await graphClient.query(query, { id: pbbAddress.toLowerCase() }); // Asegúrate de que el address esté en minúsculas
     return data.pbb ? data.pbb.messages : [];
   }
+
+  async getAuthorizedUsersByPBB(pbbAddress: string): Promise<string[]> {
+    const query = `
+      query GetAuthorizedUsers($id: ID!) {
+        pbb(id: $id) {
+          members {
+            id
+          }
+        }
+      }
+    `;
   
+    try {
+      const data = await graphClient.query(query, { id: pbbAddress.toLowerCase() });
+  
+      // Aseguramos que `authorizedUsers` es un array de objetos con el campo `id`
+      const users = data.pbb && Array.isArray(data.pbb.members)
+        ? data.pbb.members.map((user: { id: string }) => user.id)
+        : [];
+  
+      return users;
+    } catch (error) {
+      console.error("Error al cargar usuarios autorizados:", error);
+      return [];
+    }
+  }
+
   async getTopicsByPBB(pbbAddress: string): Promise<string[]> {
     const query = `
       query GetTopics($id: ID!) {
@@ -99,6 +126,7 @@ class PBBService2 {
       }
     `;
     const data = await graphClient.query(query, { id: userId });
+    console.log("AVERQEEEE: " + data.user.authorizedPBBs[0].id)
     return data.user ? data.user.authorizedPBBs : [];
   }
   
@@ -119,60 +147,48 @@ class PBBService2 {
     return data.pbbs;
   }
 
-  getContractInstance(pbbAddress: string, version: string): Contract {
+  getContractInstance(pbbAddress: string, version: number): Contract {
     const abi = ABILoader.getABI(version);
     return new Contract(pbbAddress, abi, this.signer);
   }
 
-  async addMessageToPBB(pbbAddress: string, version: string, content: string, topic: string): Promise<void> {
+  async addMessageToPBB(pbbAddress: string, version: number, content: string, topic: string): Promise<void> {
     const contract = this.getContractInstance(pbbAddress, version);
     const tx = await contract.addMessage(content, topic);
     await tx.wait();
     console.log('Mensaje agregado a la PBB');
   }
 
-  async authorizeUserToPBB(pbbAddress: string, version: string, newUser: string): Promise<void> {
+  async authorizeUserToPBB(pbbAddress: string, version: number, newUser: string): Promise<void> {
     const contract = this.getContractInstance(pbbAddress, version);
-    const tx = await contract.addAuthorizedUser(newUser);
+    const tx = await contract.addMember(newUser);
     await tx.wait();
     console.log('Usuario autorizado en la PBB');
   }
 
-  async revokeUserToPBB(pbbAddress: string, version: string, user: string): Promise<void> {
+  async revokeUserToPBB(pbbAddress: string, version: number, user: string): Promise<void> {
     const contract = this.getContractInstance(pbbAddress, version);
-    const tx = await contract.removeAuthorizedUser(user);
+    const tx = await contract.removeMember(user);
     await tx.wait();
     console.log('Usuario revocado en la PBB');
   }
 
-  async getAuthorizedUsersByPBB(pbbAddress: string): Promise<string[]> {
-    const query = `
-      query GetAuthorizedUsers($id: ID!) {
-        pbb(id: $id) {
-          authorizedUsers {
-            id
-          }
-        }
-      }
-    `;
-  
-    try {
-      const data = await graphClient.query(query, { id: pbbAddress.toLowerCase() });
-  
-      // Aseguramos que `authorizedUsers` es un array de objetos con el campo `id`
-      const users = data.pbb && Array.isArray(data.pbb.authorizedUsers)
-        ? data.pbb.authorizedUsers.map((user: { id: string }) => user.id)
-        : [];
-  
-      return users;
-    } catch (error) {
-      console.error("Error al cargar usuarios autorizados:", error);
-      return [];
-    }
+  async addAdminToPBB(pbbAddress: string, version: number, newAdmin: string): Promise<void> {
+    const contract = this.getContractInstance(pbbAddress, version);
+    const tx = await contract.addAdmin(newAdmin);
+    await tx.wait();
+    console.log('Administrador añadido a la PBB');
   }
-  
+
+  async revokeAdminFromPBB(pbbAddress: string, version: number, newAdmin: string): Promise<void> {
+    const contract = this.getContractInstance(pbbAddress, version);
+    const tx = await contract.removeAdmin(newAdmin);
+    await tx.wait();
+    console.log('Administrador revocado de la PBB');
+  }
+
 }
 
-export default PBBService2;
+export default PBBService;
 
 export { PBB };

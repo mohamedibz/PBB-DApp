@@ -2,7 +2,6 @@ import React, { createContext, useState, useContext, useEffect } from "react";
 import { BrowserProvider, JsonRpcProvider } from "ethers";
 
 import PBBService from "../services/PBBService";
-import PBBService2 from "../services/PBBService2";
 import FactoryService from "../services/FactoryService";
 
 const EthereumContext = createContext();
@@ -16,7 +15,6 @@ export function EthereumProvider({ children }) {
   const [signer, setSigner] = useState(null);
   const [account, setAccount] = useState(null);
   const [pbbService, setPbbService] = useState(null);
-  const [pbbService2, setPbbService2] = useState(null);
   const [factoryService, setFactoryService] = useState(null);
 
   const connectWallet = async () => {
@@ -33,13 +31,8 @@ export function EthereumProvider({ children }) {
     setSigner(signer);
     setAccount(selectedAccount);
 
-    // VIEJO
     setPbbService(new PBBService(provider, signer));
 
-    // NUEVO
-    setPbbService2(new PBBService2(provider, signer));
-
-    // NUEVO
     setFactoryService(new FactoryService(provider, signer));
 
     sessionStorage.setItem("userAddress", selectedAccount);
@@ -70,7 +63,7 @@ export function EthereumProvider({ children }) {
 
 
   return (
-    <EthereumContext.Provider value={{ provider, signer, account, connectWallet, disconnectWallet, pbbService, pbbService2, factoryService }}>
+    <EthereumContext.Provider value={{ provider, signer, account, connectWallet, disconnectWallet, pbbService, factoryService }}>
       {children}
     </EthereumContext.Provider>
   );
