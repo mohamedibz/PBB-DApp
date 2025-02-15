@@ -13,10 +13,11 @@
       },
       "resolveJsonModule": true,
       "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
       "outDir": "./dist",
       "strict": true,
     },
-    "include": ["src/**/*"],
+    "include": ["src/**/*", "server.js"],
     "exclude": ["node_modules", "dist"]
   }
   
