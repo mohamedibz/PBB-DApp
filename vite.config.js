@@ -15,6 +15,12 @@ export default defineConfig({
       events: 'events',
     },
   },
+  server: {
+    hot: true, 
+    watch: {
+      usePolling: true, 
+    },
+  },
   optimizeDeps: {
     esbuildOptions: {
       define: {

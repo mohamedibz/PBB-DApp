@@ -139,6 +139,8 @@ function BoardForm({ handleCancel, handleCreate }) {
           </div>
         </form>
       </div>
+
+      
     </div>
   );
 }

@@ -67,6 +67,33 @@ class PBBService {
     }
   }
 
+  async getAdminsByPBB(pbbAddress: string): Promise<string[]> {
+    const query = `
+      query GetAdmins($id: ID!) {
+        pbb(id: $id) {
+          admins {
+            id
+          }
+        }
+      }
+    `;
+  
+    try {
+      const data = await graphClient.query(query, { id: pbbAddress.toLowerCase() });
+  
+      // Aseguramos que admins es un array de objetos con el campo id
+      const admins = data.pbb && Array.isArray(data.pbb.admins)
+        ? data.pbb.admins.map((admin: { id: string }) => admin.id)
+        : [];
+  
+      return admins;
+    } catch (error) {
+      console.error("Error al cargar administradores:", error);
+      return [];
+    }
+  }
+  
+
   async getTopicsByPBB(pbbAddress: string): Promise<string[]> {
     const query = `
       query GetTopics($id: ID!) {
@@ -90,7 +117,6 @@ class PBBService {
     }
   }
   
-
   async getCreatedPBBsByUser(userId: string): Promise<PBB[]> {
     const query = `
       query GetCreatedPBBs($id: ID!) {
@@ -185,6 +211,13 @@ class PBBService {
     const tx = await contract.removeAdmin(newAdmin);
     await tx.wait();
     console.log('Administrador revocado de la PBB');
+  }
+
+  async authorizeUsersToPBB(pbbAddress: string, version: number, users: string[]): Promise<void> {
+    const contract = this.getContractInstance(pbbAddress, version);
+    const tx = await contract.addMembers(users);
+    await tx.wait();
+    console.log('Usuarios autorizados en la PBB');
   }
 
 }

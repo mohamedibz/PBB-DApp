@@ -10,6 +10,7 @@ import ManageForm from '../components/ManageForm';
 
 
 function Create() {
+  
   const { account, pbbService, factoryService, connectWallet } = useEthereum();
   const [allBoards, setAllBoards] = useState([]);
   const [filteredBoards, setFilteredBoards] = useState([]);
@@ -126,8 +127,7 @@ function Create() {
   };
 
 
-  // FORMA NUEVA
-  const handleCreateBoard2 = async (name, authorizedUsers) => {
+  const handleCreateBoard = async (name, authorizedUsers) => {
     try {
       await factoryService.createPBB(1, name, authorizedUsers);
       loadAllBoards(); // Recargar boards al crearse uno nuevo
@@ -230,7 +230,7 @@ function Create() {
             <div className="bg-yellow-800 p-1 rounded-lg shadow-lg w-[500px]">
               <BoardForm 
               handleCancel={() => setShowForm(false)} 
-              handleCreate={handleCreateBoard2} />
+              handleCreate={handleCreateBoard} />
             </div>
           </div>
         </div>
@@ -254,7 +254,7 @@ function Create() {
         <div>
           <div className="fixed inset-0 bg-transparent-700 bg-opacity-75 backdrop-blur-sm z-40 transition-opacity duration-5000 ease-in-out"></div>
           <div className="fixed inset-0 z-50 flex items-center justify-center">
-            <div className="bg-yellow-800 p-1 rounded-lg shadow-lg w-[500px]">
+            <div className="bg-yellow-800 p-1 rounded-lg shadow-lg w-[700px]">
               <ManageForm 
                 handleCancel={() => setShowManageForm(false)} 
                 authorizeUser={handleAuthorizeUser}
