@@ -1,35 +1,72 @@
-# 📢 **Plataforma Blockchain de Boletines Públicos (PBB) – Frontend**  
+# Public Bulletin Board - Frontend
 
-Este repositorio contiene el **frontend** de la **Plataforma Blockchain de Boletines Públicos (PBB)**, una aplicación descentralizada (**dApp**) construida con **React y Vite** para interactuar con contratos inteligentes en **Ethereum** mediante **MetaMask** y **ethers.js**.
+## 🚀 Descripción
+Public Bulletin Board es una aplicación web moderna construida con React y TypeScript que permite a los usuarios interactuar con un tablero de anuncios público. La aplicación está diseñada con un enfoque en la experiencia del usuario y utiliza tecnologías modernas para proporcionar una interfaz fluida y responsiva.
 
----
+## 🛠️ Tecnologías Principales
+- React 18
+- TypeScript
+- Vite
+- TailwindCSS
+- React Query
+- React Router DOM
+- Headless UI
+- Ethers.js
+- GraphQL
 
-## 🚀 **Tecnologías Utilizadas**  
-- **Vite** – Herramienta de desarrollo rápido para proyectos React.  
-- **React** – Biblioteca para la creación de interfaces de usuario.  
-- **ethers.js** – Interacción con contratos inteligentes en Ethereum.  
-- **MetaMask** – Autenticación y gestión de cuentas Ethereum.  
-- **Tailwind CSS** – Framework de estilos para diseño rápido y moderno.  
+## 📋 Prerrequisitos
+- Node.js (versión 16 o superior)
+- npm o yarn
 
----
+## 🔧 Instalación
 
-## 📦 **Instalación y Ejecución en Local**  
-
-### 1️⃣ **Clonar el Repositorio**  
-Clona el proyecto desde GitHub y accede a la carpeta del frontend:  
-```sh
-git clone https://github.com/mohamedibz/PBB-DApp.git
-cd PBB-DApp
+1. Clona el repositorio:
+```bash
+git clone [URL_DEL_REPOSITORIO]
+cd frontend
 ```
 
-### 2️⃣ **Instalación de dependencias**  
-```sh
+2. Instala las dependencias:
+```bash
 npm install
+# o
+yarn install
 ```
 
-### 3️⃣ **Ejecutar la aplicación**  
-```sh
-npm run dev
+3. Configura las variables de entorno:
+Crea un archivo `.env` en la raíz del proyecto con las variables necesarias.
+
+## 🚀 Scripts Disponibles
+
+- `npm run dev` - Inicia el servidor de desarrollo
+- `npm run build` - Construye la aplicación para producción
+- `npm run preview` - Previsualiza la build de producción
+- `npm run lint` - Ejecuta el linter
+- `npm start` - Inicia el servidor de producción
+
+## 🏗️ Estructura del Proyecto
+
 ```
+frontend/
+├── src/           # Código fuente
+├── public/        # Archivos estáticos
+├── dist/          # Build de producción
+├── .netlify.toml/       # Configuración de Netlify
+└── ...
+```
+
+## 🔒 Características de Seguridad
+- Integración con Web3
+- Manejo seguro de transacciones
+- Validación de datos
+
+## 🎨 Diseño
+La aplicación utiliza TailwindCSS para el diseño de los componentes react. El diseño es completamente responsivo y sigue las mejores prácticas de UX/UI.
+
+
+## 👥 Autores
+- Mohamed Chahid Znaidi - *Trabajo de Fin de Grado*
+
+
 
 

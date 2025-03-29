@@ -5,7 +5,6 @@ import PBBService from "../services/PBBService";
 import FactoryService from "../services/FactoryService";
 
 const EthereumContext = createContext();
-hhwwu
 export function useEthereum() {
   return useContext(EthereumContext);
 }
