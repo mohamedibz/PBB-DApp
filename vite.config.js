@@ -6,7 +6,7 @@ import rollupNodePolyFill from 'rollup-plugin-polyfill-node'
 
 // https://vite.dev/config/
 export default defineConfig({
-  base: '/',
+  base: './',
   plugins: [react()],
   resolve: {
     alias: {
